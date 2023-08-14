@@ -104,8 +104,6 @@ private:
 
     void computeRatios(CAnalyzerResult *result);
 
-    bool isValidMethod(dexMethod *method);
-
     bool isInnerClass(char *typeDescription);
 
     bool isProjectClass(CAPK *apk, char *typeDescription);

@@ -46,7 +46,7 @@ CAnalyzerResult CKotlinAnalyzer::analyze(bool hasKotlin) {
 
                 if (dex->decodeClassData(j, classData)) {
                     for (int k = 0; k < classData->header.virtualMethodsSize; k++) {
-                        if (!isValidMethod(&classData->virtualMethods[k])) {
+                        if (!dex->isValidMethod(&classData->virtualMethods[k])) {
                             continue;
                         }
 
@@ -106,7 +106,7 @@ CAnalyzerResult CKotlinAnalyzer::analyze(bool hasKotlin) {
                     }
 
                     for (int k = 0; k < classData->header.directMethodsSize; k++) {
-                        if (!isValidMethod(&classData->directMethods[k])) {
+                        if (!dex->isValidMethod(&classData->directMethods[k])) {
                             continue;
                         }
 
@@ -353,7 +353,7 @@ dexMethod *CKotlinAnalyzer::findMethodByOffset(CDex *dex, unsigned long offset) 
         }
 
         for (int k = 0; k < classData->header.virtualMethodsSize; k++) {
-            if (!isValidMethod(&classData->virtualMethods[k])) {
+            if (!dex->isValidMethod(&classData->virtualMethods[k])) {
                 continue;
             }
 
@@ -369,7 +369,7 @@ dexMethod *CKotlinAnalyzer::findMethodByOffset(CDex *dex, unsigned long offset) 
         }
 
         for (int k = 0; k < classData->header.directMethodsSize; k++) {
-            if (!isValidMethod(&classData->directMethods[k])) {
+            if (!dex->isValidMethod(&classData->directMethods[k])) {
                 continue;
             }
 
@@ -712,10 +712,6 @@ void CKotlinAnalyzer::computeRatios(CAnalyzerResult *result) {
                 result->numProjectClasses != 0 ? (float) result->numLanguageFeatureUsingProjectClasses[l] /
                                                  (float) result->numProjectClasses : 0.0f;
     }
-}
-
-bool CKotlinAnalyzer::isValidMethod(dexMethod *method) {
-    return method->accessFlags & ACC_METHOD_MASK && !(method->accessFlags & ACC_NATIVE) && method->codeOff != 0;
 }
 
 bool CKotlinAnalyzer::isInnerClass(char *typeDescription) {

@@ -300,3 +300,15 @@ bool CDisassembler::isInvocation(unsigned char *bytecode) {
 unsigned short CDisassembler::getInvocationMethodId(unsigned char *bytecode) {
     return *( unsigned short* )( &bytecode[2] );
 }
+
+bool CDisassembler::isStringConst(unsigned char *bytecode) {
+    return bytecode[0] == 0x1A || bytecode[0] == 0x1B;
+}
+
+unsigned long CDisassembler::getStringConstStringId(unsigned char *bytecode) {
+    if(bytecode[0] == 0x1A) {
+        return ( unsigned long )*(unsigned short *) (&bytecode[2]);
+    }
+
+    return *(unsigned long *) (&bytecode[2]);
+}

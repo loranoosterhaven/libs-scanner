@@ -12,6 +12,10 @@ public:
     bool isInvocation(unsigned char *bytecode);
 
     unsigned short getInvocationMethodId(unsigned char *bytecode);
+
+    bool isStringConst(unsigned char *bytecode);
+
+    unsigned long getStringConstStringId(unsigned char *bytecode);
 };
 
 #endif //DISASSEMBLER_H

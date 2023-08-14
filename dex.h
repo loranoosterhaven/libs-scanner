@@ -67,6 +67,8 @@ public:
 
     unsigned int getCodeInstructionsSize(dexCode *code);
 
+    bool isValidMethod(dexMethod *method);
+
 private:
     void decodeClassField(u1 **stream, int *lastIndex, dexField *field);
 

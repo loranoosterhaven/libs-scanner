@@ -3,17 +3,24 @@ project(src)
 
 set(CMAKE_CXX_STANDARD 14)
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
 # add extra include directories
 include_directories(/usr/local/include)
 
 # add extra lib directories
 link_directories(/usr/local/lib)
 
-file(GLOB PAYMENT_LIB_SRC "libs/*.cpp")
 file(GLOB SRC "*.cpp")
 file(GLOB AXML_PARSER "axml_parser/*.cpp")
 
-add_executable(src ${SRC} ${AXML_PARSER} ${PAYMENT_LIB_SRC} kotlinwriter.cpp kotlinwriter.h libswriter.cpp libswriter.h libsinspector.cpp libsinspector.h)
+add_executable(src ${SRC} ${AXML_PARSER})
 
 # specify the dependency on an extra library
 target_link_libraries(src libzip.a)

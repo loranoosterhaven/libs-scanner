@@ -232,3 +232,7 @@ dexCode *CDex::getCode(dexMethod *method) {
 unsigned int CDex::getCodeInstructionsSize(dexCode *code) {
     return code->insnsSize * 2;
 }
+
+bool CDex::isValidMethod(dexMethod *method) {
+    return method->accessFlags & ACC_METHOD_MASK && !(method->accessFlags & ACC_NATIVE) && method->codeOff != 0;
+}
