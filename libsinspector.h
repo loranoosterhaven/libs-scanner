@@ -63,6 +63,9 @@ private:
 
     void scanStripeVersion();
     void scanBraintreeVersion();
+    void scanAmazonIAPVersion();
+    void scanSamsungPayVersion();
+    void scanUrbanAirshipVersion();
 
 private:
     bool foundLib[LIB_MAX];

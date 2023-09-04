@@ -64,6 +64,8 @@ int processLibs(int argc, char *argv[]) {
         auto apk = new CAPK(directory->getAPKPath(i));
 
         if (apk->getNumDex() == 0) {
+            remove(directory->getAPKPath(i).c_str());
+            std::cout << "Removed " << apk->getName() << " (" << apk->getPackageName() << ") 0 dex files" << std::endl;
             continue;
         }
 

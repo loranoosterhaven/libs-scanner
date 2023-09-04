@@ -1,0 +1,57 @@
+- We may detect the usage of React Native using "com.facebook.react" or "Could not find @ReactModule annotation on "
+- Meta strings actually turn out to sometimes give false positives. Because of reflection API. Example "gov.dhs.tsa.mytsa.apk" and "com.facebook.android". Another example is Android IAP and OneSignal.
+- Facebook SDK is different from Facebook Ads for Android, now detected as one. Maybe worth mentioning?
+- Report limitation on obfuscation detection if someone defines class a with method b.
+- Check sample for obfuscation in the report.
+- Why not find some versions? Not referenced by the code. Example of Facebook.
+- Mention matching of vulnerabilities.
+- The private keys are mostly Google testing which are then often not referenced in the code.
+
+- Found two references to a private key which are non test keys:
+
+com.lutron.mmw.apk:
+
+Ref class: Lcom/lutron/mmw/communication/bridgesetup/FirmwareTroubleshooter;
+Ref method: createNonBlockingLeapConnection
+
+and com.securityandprivacy.android.verizon.vms.apk:
+
+Ref class: Lcom/tunnelbear/vpn/models/VpnConfig;
+Ref method: getConfigFile
+
+- Explain limitation of obfuscation-detection technique. False positives can theoretically occur. Marked in Overleaf already.
+
+- Presence of popular Java/Kotlin hashing algorithms has been checked and can be added using invocation tracing (like for detecting language features). Needs proper sig scanning for obfuscated cases. Further work?
+
+- The Complete PCI DSS Compliance Checklist (https://sprinto.com/blog/pci-dss-compliance-checklist/)
+    Level 1 - 4 based on number of transactions
+
+    1. Install and maintain a firewall
+    2. Don’t use default vendor settings and passwords
+    3. Protect cardholder data
+    4. Encrypt transmission <- Hence we check for private keys.
+    5. Use updated antivirus software to protect against malware <- Outdated versions.
+    6. Develop and maintain secure systems and applications <- Outdated versions.
+    7. Restrict access to cardholder data
+    8. Assign unique user access IDs
+    9. Restrict physical access to cardholder data
+    10. Monitor access to network resources
+    11. Regularly test security systems and processes
+
+Will be discussed in background section together with Chinese research paper.
+
+- Some apps are running outdated versions, just printing now. Need to update CSV, but can only be done at the end of processing so needs some updating of my csv writing lib.
+
+- We grab newest version in the dataset per payment library because our dataset dates back to a specific date. So the newest version of the payment SDK we find online may was not released then.
+
+- Few examples of apps which run very old versions:
+
+"Current: The Future of Banking" "Spend, save, and manage your money better with our mobile banking app and Visa debit card designed to make the most of what you've got."
+"Monzo Bank - Mobile Banking" "Monzo will change how you feel about banking. Spend, save and manage your money, all in one place, with the Monzo app."
+"FxPro: Trade MT4/5 Accounts" "The FxPro Trading App is your one-stop solution for all your trading needs. Whether you're interested in trading stocks, shares, indices, commodities, our app has you covered."
+
+- Compare my results to Daniels results.
+
+- Focus on performance and validations.
+
+- Make continuous improvement, so explain we revisit and expanded so that we have updated.

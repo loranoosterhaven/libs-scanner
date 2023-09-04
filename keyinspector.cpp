@@ -2,7 +2,7 @@
 
 #include "dex.h"
 #include "keyinspector.h"
-
+int numberOfLeakedKeys = 0;
 void CKeyInspector::scan(CDirectory* directory)
 {
     out = std::ofstream(directory->getPath() + "/key_leakage.txt", std::ios::app);
@@ -22,7 +22,8 @@ void CKeyInspector::scan(CDirectory* directory)
 
                 out << "=====" << apk->getName() << ": found private key:" << "=====" << std::endl << std::endl;
                 out << targetStr << std::endl << std::endl;
-
+                numberOfLeakedKeys++;
+                out << "total keys: " << numberOfLeakedKeys << std::endl;
                 printReferencingMethods(targetDex, i, j);
             } else if( strstr(targetStr,"La/") != nullptr || strstr(targetStr,"Lb/") != nullptr || strstr(targetStr,"La0/") != nullptr
                 || strstr(targetStr,"/a$a;") != nullptr) {
@@ -61,6 +62,39 @@ void CKeyInspector::printReferencingMethods(CDex* dex, int dexNum, int stringIdx
 
                 unsigned long codeInstrOffset =
                         classData->virtualMethods[k].codeOff + sizeof(dexCode);
+                unsigned char *bytecode = &dex->getBuffer()[codeInstrOffset];
+
+                unsigned long relativeOffset = 0;
+                while (relativeOffset < dex->getCodeInstructionsSize(codeHeader)) {
+                    auto instructionLen = disasm->length(&bytecode[relativeOffset]);
+
+                    if (disasm->isStringConst(&bytecode[relativeOffset]) && stringIdx == disasm->getStringConstStringId(&bytecode[relativeOffset])) {
+                        out << "\tRef string id: " << disasm->getStringConstStringId(&bytecode[relativeOffset]) << std::endl;
+                        out << "\tRef class: " << dex->getTypeDesc(classDefs->classIdx) << std::endl;
+                        out << "\tRef method: " << dex->getString(methodId->nameIdx) << std::endl;
+                        out << "\tRef string: " << dex->getString(disasm->getStringConstStringId(&bytecode[relativeOffset])) << std::endl;
+                        out << "\tRef offset: " << relativeOffset << std::endl;
+
+                        // Derive size of the key.
+                        bFoundRef = true;
+                    }
+
+                    relativeOffset += instructionLen;
+                }
+            }
+
+            for (int k = 0; k < classData->header.directMethodsSize; k++) {
+                if (!dex->isValidMethod(&classData->directMethods[k])) {
+                    continue;
+                }
+
+                auto *methodId = dex->getMethodId(classData->directMethods[k].methodIdx);
+                auto *codeHeader = (dexCode *) &dex->getBuffer()[classData->directMethods[k].codeOff];
+
+                totalClassCodeSize += dex->getCodeInstructionsSize(codeHeader);
+
+                unsigned long codeInstrOffset =
+                        classData->directMethods[k].codeOff + sizeof(dexCode);
                 unsigned char *bytecode = &dex->getBuffer()[codeInstrOffset];
 
                 unsigned long relativeOffset = 0;
